@@ -9,11 +9,11 @@ PASS='PASSWORD'
 
 echo "Torrent Details: ***" $torrentname "***" $torrentpath "***" $torrentid "***"  >> ~/execute_script.log
 
-if [ "/media/sde1/home/spammandan/private/Storage/What.cd" == "$torrentpath" ]
+if [ "/home/pddenhar/Storage/What.cd" == "$torrentpath" ]
 then
 	echo "This is a what.cd torrent, sending with FTP" >> ~/execute_script.log
 		lftp -u $USER,$PASS $HOST -e "mirror -P4 -R \"$torrentpath/$torrentname\" /Music/What.cd/; quit"  &>> ~/execute_script.log
-elif [ "/media/sde1/home/spammandan/private/Storage/AwesomeHD" == "$torrentpath" ]
+elif [ "/home/pddenhar/Storage/AwesomeHD" == "$torrentpath" ]
 then
 	echo "This is an AwesomeHD torrent, sending with FTP" >> ~/execute_script.log
 	if [ -f "$torrentpath/$torrentname" ]
@@ -24,7 +24,7 @@ then
 		echo "     Torrent is a folder" >> ~/execute_script.log
 		lftp -u $USER,$PASS $HOST -e "mirror -P4 -R \"$torrentpath/$torrentname\" /Subsonic/Movies/Uncategorized/; quit" &>> ~/execute_script.log
 	fi
-elif [ "/media/sde1/home/spammandan/private/Storage/TV Shows" == "$torrentpath" ]
+elif [ "/home/pddenhar/Storage/TV Shows" == "$torrentpath" ]
 then
         echo "This is an TV Show torrent, sending with FTP" >> ~/execute_script.log
         if [ -f "$torrentpath/$torrentname" ]
