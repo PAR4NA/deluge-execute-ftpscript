@@ -5,35 +5,19 @@ torrentpath=$3
 
 HOST='HOSTNAME.com'
 USER='USER'
-PASS='PASSWORD'
 
 echo "Torrent Details: ***" $torrentname "***" $torrentpath "***" $torrentid "***"  >> ~/execute_script.log
 
-if [ "/home/pddenhar/Storage/What.cd" == "$torrentpath" ]
+if [ "/media/Storage/Ubuntu" == "$torrentpath" ]
 then
-	echo "This is a what.cd torrent, sending with FTP" >> ~/execute_script.log
-		lftp -u $USER,$PASS $HOST -e "mirror -P4 -R \"$torrentpath/$torrentname\" /Music/What.cd/; quit"  &>> ~/execute_script.log
-elif [ "/home/pddenhar/Storage/AwesomeHD" == "$torrentpath" ]
+    echo "This is an ubuntu torrent, sending with rsync" >> ~/execute_script.log
+	rsync -ah -e ssh "$torrentpath/$torrentname" "$USER@$HOST:/mnt/tank/Ubuntu" &>> ~/execute_script.log
+elif [ "/media/Storage/Mint" == "$torrentpath" ]
 then
-	echo "This is an AwesomeHD torrent, sending with FTP" >> ~/execute_script.log
-	if [ -f "$torrentpath/$torrentname" ]
-	then
-		echo "     Torrent is a single file" >> ~/execute_script.log
-                lftp -u $USER,$PASS $HOST -e "cd /Subsonic/Movies/Uncategorized/; put \"$torrentpath/$torrentname\"; quit" &>> ~/execute_script.log
-	else
-		echo "     Torrent is a folder" >> ~/execute_script.log
-		lftp -u $USER,$PASS $HOST -e "mirror -P4 -R \"$torrentpath/$torrentname\" /Subsonic/Movies/Uncategorized/; quit" &>> ~/execute_script.log
-	fi
-elif [ "/home/pddenhar/Storage/TV Shows" == "$torrentpath" ]
+    echo "This is an mint torrent, sending with rsync" >> ~/execute_script.log
+    rsync -ah -e ssh "$torrentpath/$torrentname" "$USER@$HOST:/mnt/tank/Mint" &>> ~/execute_script.log
+elif [ "/media/Storage/Fedora" == "$torrentpath" ]
 then
-        echo "This is an TV Show torrent, sending with FTP" >> ~/execute_script.log
-        if [ -f "$torrentpath/$torrentname" ]
-        then
-                echo "     Torrent is a single file" >> ~/execute_script.log
-                lftp -u $USER,$PASS $HOST -e "cd Subsonic/TV\ Shows/Uncategorized/; put \"$torrentpath/$torrentname\"; quit" &>> ~/execute_script.log
-        else
-                echo "     Torrent is a folder" >> ~/execute_script.log
-                lftp -u $USER,$PASS $HOST -e "mirror -P4 -R \"$torrentpath/$torrentname\" \"/Subsonic/TV\ Shows/Uncategorized/\"; quit" &>> ~/execute_script.log
-        fi
-
+    echo "This is a Fedora torrent, sending with rsync" >> ~/execute_script.log
+    rsync -ah -e ssh "$torrentpath/$torrentname" "$USER@$HOST:/mnt/tank/Fedora" &>> ~/execute_script.log
 fi
