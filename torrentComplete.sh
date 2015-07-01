@@ -3,21 +3,31 @@ torrentid=$1
 torrentname=$2
 torrentpath=$3
 
-HOST='HOSTNAME.com'
-USER='USER'
+readonly BASE="/home/pddenhar/Storage"
+
+readonly HOST='HOSTNAME.COM'
+readonly USER='USERNAME' # Only public key auth is used
 
 echo "Torrent Details: ***" $torrentname "***" $torrentpath "***" $torrentid "***"  >> ~/execute_script.log
+echo "./torrentComplete.sh $1 \"$2\" \"$3\"" >> ~/execute_script.log
 
-if [ "/media/Storage/Ubuntu" == "$torrentpath" ]
+if [ "$BASE/ubuntu" == "$torrentpath" ]
 then
-    echo "This is an ubuntu torrent, sending with rsync" >> ~/execute_script.log
-	rsync -ah -e ssh "$torrentpath/$torrentname" "$USER@$HOST:/mnt/tank/Ubuntu" &>> ~/execute_script.log
-elif [ "/media/Storage/Mint" == "$torrentpath" ]
+    echo "This is an Ubuntu torrent, sending with rsync" >> ~/execute_script.log
+	savepath="isos/ubuntu"
+elif [ "$BASE/mint" == "$torrentpath" ]
 then
-    echo "This is an mint torrent, sending with rsync" >> ~/execute_script.log
-    rsync -ah -e ssh "$torrentpath/$torrentname" "$USER@$HOST:/mnt/tank/Mint" &>> ~/execute_script.log
-elif [ "/media/Storage/Fedora" == "$torrentpath" ]
+    echo "This is a mint torrent, sending with rsync" >> ~/execute_script.log
+	savepath="isos/mint"
+elif [ "$BASE/fedora" == "$torrentpath" ]
 then
-    echo "This is a Fedora torrent, sending with rsync" >> ~/execute_script.log
-    rsync -ah -e ssh "$torrentpath/$torrentname" "$USER@$HOST:/mnt/tank/Fedora" &>> ~/execute_script.log
+    echo "This is a fedora torrent, sending with rsync" >> ~/execute_script.log
+	savepath="isos/fedora"
+fi
+
+if [ -z "$savepath" ]
+then
+	echo "No match found for torrent" >> ~/execute_script.log
+else
+	rsync -v --protect-args -ah -e ssh "$torrentpath/$torrentname" "$USER@$HOST:/mnt/tank/Storage/$savepath"
 fi
