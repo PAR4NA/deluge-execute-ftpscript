@@ -29,5 +29,9 @@ if [ -z "$savepath" ]
 then
 	echo "No match found for torrent" >> ~/execute_script.log
 else
-	rsync -v --protect-args -ah -e ssh "$torrentpath/$torrentname" "$USER@$HOST:/mnt/tank/Storage/$savepath"
+        until rsync -v --protect-args -ah -e ssh "$torrentpath/$torrentname" "$USER@$HOST:/mnt/tank/Storage/$savepath"
+	do
+		echo "Rsync failed, trying again in 30s"
+		sleep 30;
+	done
 fi
